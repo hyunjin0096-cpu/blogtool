@@ -1,0 +1,36 @@
+name: 매일 블로그 초안 자동 생성
+
+on:
+  schedule:
+    # 매일 한국시간(KST) 오전 7시 = UTC 22시 (전날)
+    - cron: "0 22 * * *"
+  workflow_dispatch: {}   # Actions 탭에서 수동으로도 실행 가능
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 초안 생성 스크립트 실행
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+        run: python generate_posts.py
+
+      - name: 결과 커밋 & 푸시
+        run: |
+          git config user.name "blog-automation-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/data
+          git diff --staged --quiet || git commit -m "오늘의 초안 자동 생성 ($(date -u +%Y-%m-%d))"
+          git push
