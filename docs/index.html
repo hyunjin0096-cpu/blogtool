@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 블로그 초안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDEFF2;
+    --paper-card:#FFFFFF;
+    --ink:#1A1D23;
+    --ink-soft:#5B6270;
+    --line:#D4D8E0;
+
+    --law:#1B2A4A;
+    --law-tint:#E7EAF2;
+    --it:#0E6F6E;
+    --it-tint:#E2F1EF;
+    --job:#B0631E;
+    --job-tint:#F5E7D8;
+
+    --gold:#8A6D1F;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR", sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:48px 20px 100px;
+  }
+
+  header.masthead{
+    text-align:center;
+    margin-bottom:36px;
+  }
+  header.masthead .eyebrow{
+    font-family:"JetBrains Mono", monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+  header.masthead h1{
+    font-family:"Noto Serif KR", serif;
+    font-weight:700;
+    font-size:clamp(26px, 4vw, 38px);
+    margin:8px 0 6px;
+  }
+  header.masthead .date{
+    font-family:"JetBrains Mono", monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+
+  /* 서류 탭 스타일 카테고리 네비게이션 */
+  .tabs{
+    display:flex;
+    gap:6px;
+    margin:32px 0 0;
+    border-bottom:2px solid var(--ink);
+    flex-wrap:wrap;
+  }
+  .tab{
+    font-family:"Noto Serif KR", serif;
+    font-weight:700;
+    font-size:15px;
+    padding:10px 22px 12px;
+    border:2px solid var(--ink);
+    border-bottom:none;
+    border-radius:8px 8px 0 0;
+    background:var(--paper-card);
+    color:var(--ink-soft);
+    cursor:pointer;
+    position:relative;
+    top:2px;
+    transition:transform .15s ease, color .15s ease;
+  }
+  .tab[data-topic="법학"].active{ color:var(--law); background:var(--law-tint); }
+  .tab[data-topic="IT"].active{ color:var(--it); background:var(--it-tint); }
+  .tab[data-topic="알바꿀팁"].active{ color:var(--job); background:var(--job-tint); }
+  .tab.active{ top:0; border-bottom:2px solid transparent; }
+  .tab:not(.active):hover{ transform:translateY(-2px); }
+
+  /* 서류(카드) */
+  .doc{
+    background:var(--paper-card);
+    border:2px solid var(--ink);
+    border-radius:0 10px 10px 10px;
+    padding:36px;
+    position:relative;
+    display:none;
+  }
+  .doc.visible{ display:block; }
+
+  .stamp{
+    position:absolute;
+    top:24px;
+    right:28px;
+    font-family:"JetBrains Mono", monospace;
+    font-size:11px;
+    font-weight:500;
+    letter-spacing:.08em;
+    border:2px solid currentColor;
+    border-radius:6px;
+    padding:5px 10px;
+    transform:rotate(3deg);
+  }
+  .doc[data-topic="법학"] .stamp{ color:var(--law); }
+  .doc[data-topic="IT"] .stamp{ color:var(--it); }
+  .doc[data-topic="알바꿀팁"] .stamp{ color:var(--job); }
+
+  .doc .subtopic{
+    font-family:"JetBrains Mono", monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+
+  .doc h2{
+    font-family:"Noto Serif KR", serif;
+    font-size:24px;
+    line-height:1.4;
+    margin:0 0 20px;
+    padding-right:110px;
+  }
+
+  .doc img{
+    width:100%;
+    max-height:320px;
+    object-fit:cover;
+    border-radius:6px;
+    margin-bottom:20px;
+    border:1px solid var(--line);
+  }
+  .img-credit{
+    font-family:"JetBrains Mono", monospace;
+    font-size:10px;
+    color:var(--ink-soft);
+    margin:-14px 0 20px;
+  }
+
+  .body-text{
+    font-size:15.5px;
+    line-height:1.85;
+    white-space:pre-wrap;
+    border-top:1px dashed var(--line);
+    border-bottom:1px dashed var(--line);
+    padding:22px 0;
+  }
+
+  .hashtags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:18px;
+  }
+  .hashtags span{
+    font-family:"JetBrains Mono", monospace;
+    font-size:12px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:4px 12px;
+    color:var(--ink-soft);
+  }
+
+  .actions{
+    display:flex;
+    gap:10px;
+    margin-top:26px;
+  }
+  button.copy-btn{
+    font-family:"Noto Serif KR", serif;
+    font-weight:700;
+    font-size:14px;
+    border:2px solid var(--ink);
+    background:var(--ink);
+    color:#fff;
+    border-radius:8px;
+    padding:12px 24px;
+    cursor:pointer;
+    transition:opacity .15s ease;
+  }
+  button.copy-btn:hover{ opacity:.82; }
+  button.copy-btn.done{ background:var(--gold); border-color:var(--gold); }
+
+  .archive{
+    margin-top:14px;
+    text-align:center;
+  }
+  .archive select{
+    font-family:"JetBrains Mono", monospace;
+    font-size:12px;
+    padding:6px 10px;
+    border-radius:6px;
+    border:1px solid var(--line);
+    background:var(--paper-card);
+    color:var(--ink-soft);
+  }
+
+  .empty, .loading{
+    text-align:center;
+    color:var(--ink-soft);
+    padding:60px 20px;
+    font-family:"JetBrains Mono", monospace;
+    font-size:13px;
+  }
+
+  footer{
+    text-align:center;
+    margin-top:40px;
+    font-family:"JetBrains Mono", monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width:600px){
+    .doc{ padding:24px 20px; }
+    .doc h2{ padding-right:0; margin-top:34px; }
+    .stamp{ top:16px; right:16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">Daily Draft Case File</div>
+    <h1>오늘의 블로그 초안</h1>
+    <div class="date" id="today-label">불러오는 중...</div>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="docs"></div>
+
+  <div class="archive">
+    <label for="date-select" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-soft);">지난 기록 보기: </label>
+    <select id="date-select"></select>
+  </div>
+
+  <footer>법학 · IT · 알바꿀팁 &nbsp;|&nbsp; 초안은 참고용이며 발행 전 검토가 필요합니다</footer>
+</div>
+
+<script>
+const TOPICS = ["법학", "IT", "알바꿀팁"];
+
+async function fetchJSON(path) {
+  const res = await fetch(path + "?t=" + Date.now());
+  if (!res.ok) throw new Error("not found: " + path);
+  return res.json();
+}
+
+function renderDocs(dateStr, posts) {
+  document.getElementById("today-label").textContent = dateStr + " 기준";
+
+  const tabsEl = document.getElementById("tabs");
+  const docsEl = document.getElementById("docs");
+  tabsEl.innerHTML = "";
+  docsEl.innerHTML = "";
+
+  if (!posts || posts.length === 0) {
+    docsEl.innerHTML = '<div class="empty">이 날짜에는 생성된 초안이 없습니다.</div>';
+    return;
+  }
+
+  const byTopic = {};
+  posts.forEach(p => byTopic[p.topic] = p);
+
+  TOPICS.forEach((topic, i) => {
+    const post = byTopic[topic];
+    if (!post) return;
+
+    const tab = document.createElement("div");
+    tab.className = "tab" + (i === 0 ? " active" : "");
+    tab.dataset.topic = topic;
+    tab.textContent = topic;
+    tab.onclick = () => {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".doc").forEach(d => d.classList.remove("visible"));
+      tab.classList.add("active");
+      document.querySelector(`.doc[data-topic="${topic}"]`).classList.add("visible");
+    };
+    tabsEl.appendChild(tab);
+
+    const doc = document.createElement("div");
+    doc.className = "doc" + (i === 0 ? " visible" : "");
+    doc.dataset.topic = topic;
+
+    const hashtags = (post.hashtags || []).map(h => `<span>#${h}</span>`).join("");
+    const imgHtml = post.image_url
+      ? `<img src="${post.image_url}" alt="">
+         <div class="img-credit">${post.image_credit || ""}</div>`
+      : "";
+
+    doc.innerHTML = `
+      <div class="stamp">${topic}</div>
+      <div class="subtopic">오늘의 소재 · ${post.subtopic || ""}</div>
+      <h2>${post.title || ""}</h2>
+      ${imgHtml}
+      <div class="body-text">${(post.body || "").replace(/</g,"&lt;")}</div>
+      <div class="hashtags">${hashtags}</div>
+      <div class="actions">
+        <button class="copy-btn" data-copy-title="${encodeURIComponent(post.title||"")}" data-copy-body="${encodeURIComponent(post.body||"")}" data-copy-tags="${encodeURIComponent((post.hashtags||[]).map(h=>'#'+h).join(' '))}">
+          제목+본문 복사하기
+        </button>
+      </div>
+    `;
+    docsEl.appendChild(doc);
+  });
+
+  docsEl.querySelectorAll(".copy-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const title = decodeURIComponent(btn.dataset.copyTitle);
+      const body = decodeURIComponent(btn.dataset.copyBody);
+      const tags = decodeURIComponent(btn.dataset.copyTags);
+      const full = `${title}\n\n${body}\n\n${tags}`;
+      try {
+        await navigator.clipboard.writeText(full);
+        btn.textContent = "복사 완료 ✓";
+        btn.classList.add("done");
+        setTimeout(() => { btn.textContent = "제목+본문 복사하기"; btn.classList.remove("done"); }, 1800);
+      } catch (e) {
+        alert("복사에 실패했습니다. 직접 드래그해서 복사해주세요.");
+      }
+    });
+  });
+}
+
+async function loadDate(dateStr) {
+  try {
+    const data = await fetchJSON(`data/${dateStr}.json`);
+    renderDocs(data.date, data.posts);
+  } catch (e) {
+    document.getElementById("docs").innerHTML = '<div class="empty">데이터를 불러오지 못했습니다.</div>';
+  }
+}
+
+async function init() {
+  try {
+    const index = await fetchJSON("data/index.json");
+    const dates = index.dates || [];
+    const select = document.getElementById("date-select");
+
+    if (dates.length === 0) {
+      document.getElementById("docs").innerHTML =
+        '<div class="empty">아직 생성된 초안이 없습니다.<br>GitHub Actions가 처음 실행되면 이곳에 표시됩니다.</div>';
+      document.getElementById("today-label").textContent = "데이터 없음";
+      return;
+    }
+
+    dates.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d;
+      opt.textContent = d;
+      select.appendChild(opt);
+    });
+    select.value = dates[0];
+    select.onchange = () => loadDate(select.value);
+
+    await loadDate(dates[0]);
+  } catch (e) {
+    document.getElementById("docs").innerHTML =
+      '<div class="empty">아직 생성된 초안이 없습니다.<br>GitHub Actions가 처음 실행되면 이곳에 표시됩니다.</div>';
+    document.getElementById("today-label").textContent = "데이터 없음";
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
