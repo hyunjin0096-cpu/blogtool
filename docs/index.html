@@ -87,7 +87,7 @@
   }
   .tab[data-topic="법학"].active{ color:var(--law); background:var(--law-tint); }
   .tab[data-topic="IT"].active{ color:var(--it); background:var(--it-tint); }
-  .tab[data-topic="알바꿀팁"].active{ color:var(--job); background:var(--job-tint); }
+  .tab[data-topic="가"].active{ color:var(--job); background:var(--job-tint); }
   .tab.active{ top:0; border-bottom:2px solid transparent; }
   .tab:not(.active):hover{ transform:translateY(-2px); }
 
@@ -117,7 +117,7 @@
   }
   .doc[data-topic="법학"] .stamp{ color:var(--law); }
   .doc[data-topic="IT"] .stamp{ color:var(--it); }
-  .doc[data-topic="알바꿀팁"] .stamp{ color:var(--job); }
+  .doc[data-topic="가을"] .stamp{ color:var(--job); }
 
   .doc .subtopic{
     font-family:"JetBrains Mono", monospace;
@@ -248,11 +248,11 @@
     <select id="date-select"></select>
   </div>
 
-  <footer>법학 · IT · 알바꿀팁 &nbsp;|&nbsp; 초안은 참고용이며 발행 전 검토가 필요합니다</footer>
+  <footer>법학 · IT · 가을 &nbsp;|&nbsp; 초안은 참고용이며 발행 전 검토가 필요합니다</footer>
 </div>
 
 <script>
-const TOPICS = ["법학", "IT", "알바꿀팁"];
+const TOPICS = ["법학", "IT", "가"];
 
 async function fetchJSON(path) {
   const res = await fetch(path + "?t=" + Date.now());
