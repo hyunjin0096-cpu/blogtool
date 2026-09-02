@@ -87,7 +87,7 @@
   }
   .tab[data-topic="법학"].active{ color:var(--law); background:var(--law-tint); }
   .tab[data-topic="IT"].active{ color:var(--it); background:var(--it-tint); }
-  .tab[data-topic="가"].active{ color:var(--job); background:var(--job-tint); }
+  .tab[data-topic="가을"].active{ color:var(--job); background:var(--job-tint); }
   .tab.active{ top:0; border-bottom:2px solid transparent; }
   .tab:not(.active):hover{ transform:translateY(-2px); }
 
@@ -252,7 +252,7 @@
 </div>
 
 <script>
-const TOPICS = ["법학", "IT", "가"];
+const TOPICS = ["법학", "IT", "가을"];
 
 async function fetchJSON(path) {
   const res = await fetch(path + "?t=" + Date.now());
